@@ -76,6 +76,12 @@ public class ReportCommand implements CommandExecutor{
 				player.sendMessage("");
 				player.sendMessage(MessageUtils.centerMessage(MessageUtils.coloredMessage("&aPlayer: &e" + target.getName())));
 				player.sendMessage(MessageUtils.centerMessage(MessageUtils.coloredMessage("&aReason: &e" + reason)));
+				
+				for(Player players : Bukkit.getServer().getOnlinePlayers()){
+					if(players.hasPermission("mreports.chatview") || player.isOp()){
+						players.sendMessage(MessageUtils.coloredMessage("&4&l!! &r&cA new report has been submitted!"));
+					}
+				}
 			}
 		}
 		return false;
