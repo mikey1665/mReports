@@ -38,6 +38,10 @@ public class ReportCommand implements CommandExecutor{
 					player.sendMessage(MessageUtils.coloredMessage("&cPlease specify a reason!"));
 					return false;
 				}
+				if(args[0].equalsIgnoreCase(player.getName())){
+					player.sendMessage(MessageUtils.coloredMessage("&cYou cannot report yourself!"));
+					return false;
+				}
 				StringBuilder str = new StringBuilder();
 				for (int i = 1; i < args.length; i++) {
 					str.append(args[i] + " ");
