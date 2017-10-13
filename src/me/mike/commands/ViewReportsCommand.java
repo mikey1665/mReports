@@ -25,7 +25,7 @@ public class ViewReportsCommand implements CommandExecutor{
 			if(sender.hasPermission("mreports.view") || sender.isOp()) {
 				Player player = (Player) sender;
 				Bukkit.getServer().broadcastMessage("Debug!");
-				CurrentReports.createReportInventory(plugin, player);
+				CurrentReports.createReportInventory(player);
 			}
 		}
 		return false;

@@ -51,7 +51,7 @@ public class ReportCommand implements CommandExecutor{
 					return false;
 				}
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+				SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 				Date currTime= new Date();
 				
 				if(plugin.getReports().getData().contains("ActiveReports." + target.getUniqueId())) {
