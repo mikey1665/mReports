@@ -1,0 +1,6 @@
+name: mReports
+main: me.mike.Main
+version: 1.0
+commands:
+     report:
+     viewreports:
