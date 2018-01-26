@@ -1,6 +1,5 @@
 package me.mike.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,7 +23,6 @@ public class ViewReportsCommand implements CommandExecutor{
 		if(sender instanceof Player) {
 			if(sender.hasPermission("mreports.view") || sender.isOp()) {
 				Player player = (Player) sender;
-				Bukkit.getServer().broadcastMessage("Debug!");
 				CurrentReports.createReportInventory(player);
 			}
 		}

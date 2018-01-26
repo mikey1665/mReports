@@ -21,6 +21,9 @@ public class ReportCommand implements CommandExecutor{
 	 * FINISHED!
 	 * 
 	 * TODO: Keep track on how much times the player has been reported *Done*
+	 * 
+	 * --------------------
+	 * 
 	 * TODO: add a cooldown so a player can report a player every 10 seconds (prevent spam)
 	 */
 	
@@ -38,7 +41,7 @@ public class ReportCommand implements CommandExecutor{
 					player.sendMessage(MessageUtils.coloredMessage("&cPlease specify a reason!"));
 					return false;
 				}
-				if(args[0].equalsIgnoreCase(player.getName())){
+				if(args[0].equalsIgnoreCase(player.getName()) && !player.isOp()){
 					player.sendMessage(MessageUtils.coloredMessage("&cYou cannot report yourself!"));
 					return false;
 				}
@@ -55,12 +58,13 @@ public class ReportCommand implements CommandExecutor{
 					return false;
 				}
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+				SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm a");
 				Date currTime= new Date();
+				
 				
 				if(plugin.getReports().getData().contains("ActiveReports." + target.getUniqueId())) {
 					int numOfReports = plugin.getReports().getData().getInt("ActiveReports." + target.getUniqueId() + ".Reports");
-					plugin.getReports().getData().set("ActiveReports." + target.getUniqueId() + ".Reason", reason);
+					//plugin.getReports().getData().set("ActiveReports." + target.getUniqueId() + ".Reason", reason);
 					plugin.getReports().getData().set("ActiveReports." + target.getUniqueId() + ".Submitted", sdf.format(currTime));
 					plugin.getReports().getData().set("ActiveReports." + target.getUniqueId() + ".Reports", numOfReports + 1);
 					plugin.getReports().saveData();
@@ -73,7 +77,7 @@ public class ReportCommand implements CommandExecutor{
 				
 				player.sendMessage(MessageUtils.centerMessage(MessageUtils.coloredMessage("&b&l=-=-= &6Report &b&l=-=-=")));
 				player.sendMessage(MessageUtils.centerMessage(MessageUtils.coloredMessage("&dDate of report: &e" + sdf.format(currTime))));
-				player.sendMessage("");
+				//player.sendMessage("");
 				player.sendMessage(MessageUtils.centerMessage(MessageUtils.coloredMessage("&aPlayer: &e" + target.getName())));
 				player.sendMessage(MessageUtils.centerMessage(MessageUtils.coloredMessage("&aReason: &e" + reason)));
 				
