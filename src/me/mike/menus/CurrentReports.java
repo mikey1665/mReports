@@ -19,9 +19,10 @@ import me.mike.utils.MessageUtils;
 public class CurrentReports {
 
 	/*
-	 * TODO: Add a fix if theres no players. - Done TODO: Colorize the number of
-	 * reports - Done? TODO: Inventory or Class for ReportAction ReportAction will
+	 * TODO: Inventory or Class for ReportAction ReportAction will
 	 * handle banning, kicking, and warning.
+	 * 
+	 * TODO: Be able to view the top 3 reasons.
 	 * 
 	 */
 
@@ -42,8 +43,10 @@ public class CurrentReports {
 
 			emptyMeta.setDisplayName(MessageUtils.coloredMessage("&a&lNo Reports!"));
 			emptyMeta.setLore(
-					Arrays.asList("", MessageUtils.coloredMessage("&eWoohoo! There's nothing to worry about")));
-			reports.setItem(5, empty);
+					Arrays.asList("", MessageUtils.coloredMessage("&eWoohoo!"),
+							MessageUtils.coloredMessage("&eThere's nothing to worry about.")));
+			empty.setItemMeta(emptyMeta);
+			reports.setItem(4, empty);
 		} else {
 			for (String s : section.getKeys(false)) {
 				ConfigurationSection cs2 = section.getConfigurationSection(s);
@@ -58,14 +61,14 @@ public class CurrentReports {
 						.getInt("ActiveReports." + reportedPlayers + ".Reports");
 
 				// Determine Color
-				String colorNode;
-				if (reportsAmount >= 3 && reportsAmount < 5) {
+				String colorNode = "";
+				if(reportsAmount >= 1 && reportsAmount <= 3) {
+					colorNode = "&f";
+				} else if (reportsAmount >= 4 && reportsAmount <= 6) {
 					colorNode = "&e";
-					return;
-				} else if (reportsAmount >= 6 && reportsAmount < 8) {
+				} else if (reportsAmount >= 7 && reportsAmount <= 9) {
 					colorNode = "&c";
-					return;
-				} else {
+				} else if(reportsAmount >= 10){
 					colorNode = "&4";
 				}
 

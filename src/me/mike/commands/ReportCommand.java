@@ -1,7 +1,10 @@
 package me.mike.commands;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -15,14 +18,8 @@ import me.mike.utils.MessageUtils;
 public class ReportCommand implements CommandExecutor{
 	
 	/*
-	 * TODO: Report command.
-	 * TODO: Usage: /report {player} {reason}
-	 * 
-	 * FINISHED!
-	 * 
-	 * TODO: Keep track on how much times the player has been reported *Done*
-	 * 
-	 * --------------------
+	 * Report command.
+	 * Usage: /report {player} {reason}
 	 * 
 	 * TODO: add a cooldown so a player can report a player every 10 seconds (prevent spam)
 	 */
@@ -62,14 +59,22 @@ public class ReportCommand implements CommandExecutor{
 				Date currTime= new Date();
 				
 				
+				//We want it so when a player reports the same player, it adds the other reason onto the list.
+				
 				if(plugin.getReports().getData().contains("ActiveReports." + target.getUniqueId())) {
+					
 					int numOfReports = plugin.getReports().getData().getInt("ActiveReports." + target.getUniqueId() + ".Reports");
-					//plugin.getReports().getData().set("ActiveReports." + target.getUniqueId() + ".Reason", reason);
+					
+					//Get the current List of Strings we have, add another reason onto it.
+					List<String> reasons = plugin.getReports().getData().getStringList("ActiveReports." + target.getUniqueId() + ".Reasons");
+					reasons.add(reason);
+					
+					plugin.getReports().getData().set("ActiveReports." + target.getUniqueId() + ".Reasons", reasons);
 					plugin.getReports().getData().set("ActiveReports." + target.getUniqueId() + ".Submitted", sdf.format(currTime));
 					plugin.getReports().getData().set("ActiveReports." + target.getUniqueId() + ".Reports", numOfReports + 1);
 					plugin.getReports().saveData();
 				} else {
-					plugin.getReports().getData().set("ActiveReports." + target.getUniqueId() + ".Reason", reason);
+					plugin.getReports().getData().set("ActiveReports." + target.getUniqueId() + ".Reasons", Arrays.asList(reason));
 					plugin.getReports().getData().set("ActiveReports." + target.getUniqueId() + ".Submitted", sdf.format(currTime));
 					plugin.getReports().getData().set("ActiveReports." + target.getUniqueId() + ".Reports", 1);
 					plugin.getReports().saveData();
@@ -77,7 +82,6 @@ public class ReportCommand implements CommandExecutor{
 				
 				player.sendMessage(MessageUtils.centerMessage(MessageUtils.coloredMessage("&b&l=-=-= &6Report &b&l=-=-=")));
 				player.sendMessage(MessageUtils.centerMessage(MessageUtils.coloredMessage("&dDate of report: &e" + sdf.format(currTime))));
-				//player.sendMessage("");
 				player.sendMessage(MessageUtils.centerMessage(MessageUtils.coloredMessage("&aPlayer: &e" + target.getName())));
 				player.sendMessage(MessageUtils.centerMessage(MessageUtils.coloredMessage("&aReason: &e" + reason)));
 				

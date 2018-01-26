@@ -34,7 +34,7 @@ public class Warn {
 				p.sendMessage(MessageUtils.coloredMessage("&4You have been warned! You have &d" + numUntil + " warnings! "));
 			}
 		} else {
-			//TODO: Generate the player in the config.
+			//TODO: Gen7erate the player in the config.
 		}
 	}
 
