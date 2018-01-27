@@ -1,6 +1,9 @@
 package me.mike.menus;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,12 +22,12 @@ import me.mike.utils.MessageUtils;
 public class CurrentReports {
 
 	/*
-	 * TODO: Inventory or Class for ReportAction ReportAction will
-	 * handle banning, kicking, and warning.
-	 * 
-	 * TODO: Be able to view the top 3 reasons.
+	 * TODO: Inventory or Class for ReportAction ReportAction will handle banning,
+	 * kicking, and warning.
 	 * 
 	 */
+
+	private static int amountOfReasons = 3;
 
 	public static Main plugin = Main.getPlugin(Main.class);
 
@@ -42,9 +45,8 @@ public class CurrentReports {
 			ItemMeta emptyMeta = empty.getItemMeta();
 
 			emptyMeta.setDisplayName(MessageUtils.coloredMessage("&a&lNo Reports!"));
-			emptyMeta.setLore(
-					Arrays.asList("", MessageUtils.coloredMessage("&eWoohoo!"),
-							MessageUtils.coloredMessage("&eThere's nothing to worry about.")));
+			emptyMeta.setLore(Arrays.asList("", MessageUtils.coloredMessage("&eWoohoo!"),
+					MessageUtils.coloredMessage("&eThere's nothing to worry about.")));
 			empty.setItemMeta(emptyMeta);
 			reports.setItem(4, empty);
 		} else {
@@ -53,30 +55,36 @@ public class CurrentReports {
 				String reportedPlayers = cs2.getName().toString();
 				OfflinePlayer target = Bukkit.getOfflinePlayer(reportedPlayers);
 
-				String reason = plugin.getReports().getData()
-						.getString("ActiveReports." + reportedPlayers + ".Reason");
 				String date = plugin.getReports().getData()
 						.getString("ActiveReports." + reportedPlayers + ".Submitted");
 				int reportsAmount = plugin.getReports().getData()
 						.getInt("ActiveReports." + reportedPlayers + ".Reports");
 
-				// Determine Color
-				String colorNode = "";
-				if(reportsAmount >= 1 && reportsAmount <= 3) {
-					colorNode = "&f";
-				} else if (reportsAmount >= 4 && reportsAmount <= 6) {
-					colorNode = "&e";
-				} else if (reportsAmount >= 7 && reportsAmount <= 9) {
-					colorNode = "&c";
-				} else if(reportsAmount >= 10){
-					colorNode = "&4";
+				List<String> reasonsList = plugin.getReports().getData()
+						.getStringList("ActiveReports." + target.getName() + ".Reasons");
+				String[] reasons = reasonsList.toArray(new String[0]);
+				
+
+				String[] colorNode = new String[] {"&f", "&e", "&c", "&4"} ;
+
+				List<String> lore = new ArrayList<String>();
+				lore.add(" ");
+				lore.add(MessageUtils.coloredMessage("&dDate Submitted &r") + date);
+				lore.add(MessageUtils.coloredMessage("&d# of Reports: " + colorNode[determineColor(reportsAmount)]) + reportsAmount);
+				lore.add(MessageUtils.coloredMessage("&6(3) &dReport Reasons: &r"));
+
+				for (int i = 0; i < amountOfReasons; i++) {
+					if (reasons[i] == null)
+						break;
+					lore.add(MessageUtils.coloredMessage("&8&l- &f") + reasons[i]);
 				}
 
+				String onlineOffline = isOnline(UUID.fromString(target.getName())) ? "&aOnline" : "&cOffline";
+				lore.add(MessageUtils.coloredMessage("&dPlayer Status: &r" + onlineOffline));
+				lore.add("");
+
 				meta.setDisplayName(ChatColor.YELLOW + target.getName());
-				meta.setLore(Arrays.asList(" ", 
-						MessageUtils.coloredMessage("&dDate Submitted &r") + date,
-						MessageUtils.coloredMessage("&d# of Reports: " + colorNode) + reportsAmount,
-						MessageUtils.coloredMessage("&dReport Reason: &r") + reason));
+				meta.setLore(lore);
 				item.setItemMeta(meta);
 				reports.addItem(item);
 			}
@@ -106,6 +114,28 @@ public class CurrentReports {
 		reports.setItem(36, grayPane);
 
 		player.openInventory(reports);
+	}
+
+	public static boolean isOnline(UUID uuid) {
+		for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+			if (p.getUniqueId().equals(uuid))
+				return true;
+		}
+		return false;
+	}
+	
+	public static int determineColor(int reportsAmount) {
+		int colorNumber = 0;
+		if (reportsAmount >= 1 && reportsAmount <= 3) {
+			 return 0;
+		} else if (reportsAmount >= 4 && reportsAmount <= 6) {
+			return 1;
+		} else if (reportsAmount >= 7 && reportsAmount <= 9) {
+			return 2;
+		} else if (reportsAmount >= 10) {
+			return 3;
+		}
+		return 0;
 	}
 
 }

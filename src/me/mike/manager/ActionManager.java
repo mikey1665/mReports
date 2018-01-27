@@ -11,18 +11,24 @@ import org.bukkit.entity.Player;
 public class ActionManager {
 	
 	public enum ActionType{
-		BAN(Material.DIAMOND_AXE),
-		KICK(Material.WOOD_AXE),
-		WARN(Material.PAPER);
+		BAN(Material.DIAMOND_AXE, "You have been banned!"),
+		KICK(Material.WOOD_AXE, "You have been kicked!"),
+		WARN(Material.PAPER, "You have been warned!");
 		
 		private final Material icon;
+		private final String dReason;
 		
-		ActionType(Material icon){
+		ActionType(Material icon, String defaultKick){
 			this.icon = icon;
+			this.dReason = defaultKick;
 		}
 		
 		public Material getMaterial() {
 			return icon;
+		}
+		
+		public String getDefaultReason() {
+			return dReason;
 		}
 	}
 	
@@ -46,7 +52,7 @@ public class ActionManager {
 	public ActionManager(OfflinePlayer player, ActionType type) {
 		this.oPlayer = player;
 		this.aType = type;
-		this.reason = null;
+		this.reason = type.getDefaultReason();
 		handleAction(oPlayer, aType, reason);
 	}
 	
@@ -55,14 +61,15 @@ public class ActionManager {
 		
 		if(type == ActionType.BAN) {
 			if(p!=null) {
-				Bukkit.getBanList(Type.NAME).addBan(p.getName(), reason, null, "mReports");
+				//If the player exceeds over 3 warnings, execute a 1 Day ban.
+				Bukkit.getBanList(Type.NAME).addBan(p.getName(), reason, /*Calculate 1 Day*/null, "mReports");
 			}
 		}else if(type == ActionType.KICK) {
 			if(p!=null) {
 				p.kickPlayer(reason);
 			}
 		}else if(type == ActionType.WARN) {
-			Warn target = new Warn(player, reason);
+			new Warn(player, reason);
 		}
 	}
 	

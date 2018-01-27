@@ -32,9 +32,11 @@ public class Warn {
 			if(p!=null) {
 				int numUntil = maxWarns - numOfWarns;
 				p.sendMessage(MessageUtils.coloredMessage("&4You have been warned! You have &d" + numUntil + " warnings! "));
+			} else {
+				//TODO: If the player is null announce a broadcast?? idk
 			}
 		} else {
-			//TODO: Gen7erate the player in the config.
+			//TODO: Generate a profile in the config.
 		}
 	}
 
